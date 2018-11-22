@@ -35,19 +35,11 @@ void OpticalFlowTracker::setTrackPara(const CamIntrinsic_t &mCamInsic)
 
 void OpticalFlowTracker::trackCurrFrame(const cv::Mat &image, Frame *pCurFrame)
 {
-    clock_t start, finish;
-    double duration;
-    start = clock();
-
     int nTracked = 0;
     if (image.channels() != 1)
         cv::cvtColor(image, mCurrImage_, CV_BGR2GRAY);
     else
         image.copyTo(mCurrImage_);
-
-    finish = clock();
-    duration = (double)(finish - start) / CLOCKS_PER_SEC;
-    std::cout << "imgcvt time: " << duration << std::endl;
 
     if (pLastFrame_ == NULL)
     {
@@ -61,59 +53,31 @@ void OpticalFlowTracker::trackCurrFrame(const cv::Mat &image, Frame *pCurFrame)
         std::vector<cv::Point2f> vCurrP2ds;
         std::vector<Feature *> vLastFeatures;
 
-        start = clock();
         //*** step1.get 2d points from last frame;
         pLastFrame_->getValidFeaPts(vLastFeatures, vLastP2ds);
         std::vector<bool> vInlierFlags(vLastP2ds.size(), false);
-        finish = clock();
-        duration = (double)(finish - start) / CLOCKS_PER_SEC;
-        std::cout << "getfeatures time: " << duration << std::endl;
 
-        start = clock();
         //*** step2.track with optical flow;
         opticalFlowTrack(vLastP2ds, vCurrP2ds, vInlierFlags);
-        finish = clock();
-        duration = (double)(finish - start) / CLOCKS_PER_SEC;
-        std::cout << "opt flow time: " << duration << std::endl;
 
         //*** step3.remove outliers
-        start = clock();
         removeOutliers(vInlierFlags, vLastFeatures, vCurrP2ds);
-        finish = clock();
-        duration = (double)(finish - start) / CLOCKS_PER_SEC;
-        std::cout << "remove outliers time: " << duration << std::endl;
 
         //*** step4 add frame as obs to features, and add feature to frame;
-        start = clock();
         addObsTracks(vLastFeatures, vCurrP2ds, pCurFrame);
-        finish = clock();
-        duration = (double)(finish - start) / CLOCKS_PER_SEC;
-        std::cout << "add obs time: " << duration << std::endl;
 
         //*** step5.update the mask
-        start = clock();
         updateMask(vCurrP2ds);
-        finish = clock();
-        duration = (double)(finish - start) / CLOCKS_PER_SEC;
-        std::cout << "set mask time: " << duration << std::endl;
 
         nTracked = static_cast<int>(vCurrP2ds.size());
     }
 
     //*** step6.extract new 2d points to next track;
-    start = clock();
     std::vector<cv::Point2f> vNewPts;
     extractPoints(nTracked, mCurrImage_, vNewPts);
-    finish = clock();
-    duration = (double)(finish - start) / CLOCKS_PER_SEC;
-    std::cout << "extract time: " << duration << std::endl;
 
     //*** step7. create new features and add obs
-    start = clock();
     addObsTracks(std::vector<Feature *>(), vNewPts, pCurFrame);
-    finish = clock();
-    duration = (double)(finish - start) / CLOCKS_PER_SEC;
-    std::cout << "***add second obs time: " << duration << std::endl;
 
     bool debug = true;
     if (debug)

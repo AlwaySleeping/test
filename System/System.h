@@ -8,10 +8,12 @@
 class InputPacker;
 class AlgoConfig;
 class SensorConfig;
+struct ImuInfo_s;
 
 namespace SLAM
 {
 
+class Frame;
 class OpticalFlowTracker;
 
 class System
@@ -29,6 +31,8 @@ class System
 
     void run();
 
+    Frame *createFrame(int currFrameId, std::vector<ImuInfo_s> &vImuDate);
+
   private:
     InputPacker *pInPacker_;
     AlgoConfig *pAlgoCfg_;
@@ -42,6 +46,9 @@ class System
     CamIntrinsic_t mCamInsic_;
     ImuIntrinsic_t mImuInsic_;
     Eigen::Matrix4d mTbc_; //from cam to imu
+
+    //status:
+    bool bInitialized_;
 };
 
 } // namespace SLAM

@@ -26,6 +26,9 @@ System::System()
     pInPacker_ = NULL;
     pAlgoCfg_ = NULL;
     pSensCfg_ = NULL;
+    pOpticalFlowTracker_ = NULL;
+
+    bInitialized_ = false;
 }
 
 void System::init(InputPacker *pInPacker,
@@ -61,27 +64,16 @@ void System::run()
     {
         cv::Mat img;
         std::vector<ImuInfo_s> vImuDate;
-        clock_t start, finish;
-        double duration;
-        start = clock();
         if (!pInPacker_->getSensorData(currFrameId, img, vImuDate))
             break;
-        finish = clock();
-        duration = (double)(finish - start) / CLOCKS_PER_SEC;
-        std::cout << "read image time: " << duration << std::endl;
 
-        Frame *pFrame = new Frame(currFrameId);
-
+        Frame* pCurrFrame = createFrame(currFrameId, vImuDate);
         //*** step1: tracking:
         {
             //*** step1.1: optical flow tracking
-            start = clock();
-            pOpticalFlowTracker_->trackCurrFrame(img, pFrame);
-            finish = clock();
-            duration = (double)(finish - start) / CLOCKS_PER_SEC;
-            std::cout << "===track time: " << duration << std::endl;
-            //*** step1.2: create frame:
-            //*** step1.3: init slame;
+            pOpticalFlowTracker_->trackCurrFrame(img, pCurrFrame);
+
+            //*** step1.2: init slame;
         }
 
         //*** step2: mapping:
@@ -92,6 +84,13 @@ void System::run()
 
         currFrameId++;
     }
+}
+
+Frame *System::createFrame(int currFrameId, std::vector<ImuInfo_s> &vImuDate)
+{
+    Frame *pFrame = new Frame(currFrameId);
+
+    return pFrame;
 }
 
 } // namespace SLAM
