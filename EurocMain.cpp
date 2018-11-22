@@ -6,7 +6,7 @@
 int main(int argc, char **argv)
 {
     std::string casePath = "/media/psf/Home/Documents/videos/kitti-mav/EuRoCMAVDataset/MH_01_easy/mav0";
-    std::string sensorCfgPath = "/media/psf/AllFiles/Volumes/Project/git/FYSLAM/FYSlam20181119/config/cam_imu.yaml"; 
+    std::string sensorCfgPath = "/media/psf/AllFiles/Volumes/Project/git/test/config/cam_imu.yaml"; 
     std::string AlgoCfgPath = ""; //TODO
 
     EurocInPacker* pEuPacker = new EurocInPacker();

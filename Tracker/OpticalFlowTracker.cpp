@@ -35,11 +35,19 @@ void OpticalFlowTracker::setTrackPara(const CamIntrinsic_t &mCamInsic)
 
 void OpticalFlowTracker::trackCurrFrame(const cv::Mat &image, Frame *pCurFrame)
 {
+    clock_t start, finish;
+    double duration;
+    start = clock();
+
     int nTracked = 0;
     if (image.channels() != 1)
         cv::cvtColor(image, mCurrImage_, CV_BGR2GRAY);
     else
         image.copyTo(mCurrImage_);
+
+    finish = clock();
+    duration = (double)(finish - start) / CLOCKS_PER_SEC;
+    std::cout << "imgcvt time: " << duration << std::endl;
 
     if (pLastFrame_ == NULL)
     {
@@ -49,32 +57,63 @@ void OpticalFlowTracker::trackCurrFrame(const cv::Mat &image, Frame *pCurFrame)
     }
     else
     {
-
         std::vector<cv::Point2f> vLastP2ds;
         std::vector<cv::Point2f> vCurrP2ds;
         std::vector<Feature *> vLastFeatures;
 
+        start = clock();
         //*** step1.get 2d points from last frame;
         pLastFrame_->getValidFeaPts(vLastFeatures, vLastP2ds);
         std::vector<bool> vInlierFlags(vLastP2ds.size(), false);
+        finish = clock();
+        duration = (double)(finish - start) / CLOCKS_PER_SEC;
+        std::cout << "getfeatures time: " << duration << std::endl;
 
+        start = clock();
         //*** step2.track with optical flow;
         opticalFlowTrack(vLastP2ds, vCurrP2ds, vInlierFlags);
+        finish = clock();
+        duration = (double)(finish - start) / CLOCKS_PER_SEC;
+        std::cout << "opt flow time: " << duration << std::endl;
+
         //*** step3.remove outliers
+        start = clock();
         removeOutliers(vInlierFlags, vLastFeatures, vCurrP2ds);
+        finish = clock();
+        duration = (double)(finish - start) / CLOCKS_PER_SEC;
+        std::cout << "remove outliers time: " << duration << std::endl;
+
         //*** step4 add frame as obs to features, and add feature to frame;
+        start = clock();
         addObsTracks(vLastFeatures, vCurrP2ds, pCurFrame);
+        finish = clock();
+        duration = (double)(finish - start) / CLOCKS_PER_SEC;
+        std::cout << "add obs time: " << duration << std::endl;
+
         //*** step5.update the mask
+        start = clock();
         updateMask(vCurrP2ds);
+        finish = clock();
+        duration = (double)(finish - start) / CLOCKS_PER_SEC;
+        std::cout << "set mask time: " << duration << std::endl;
 
         nTracked = static_cast<int>(vCurrP2ds.size());
     }
 
     //*** step6.extract new 2d points to next track;
+    start = clock();
     std::vector<cv::Point2f> vNewPts;
     extractPoints(nTracked, mCurrImage_, vNewPts);
+    finish = clock();
+    duration = (double)(finish - start) / CLOCKS_PER_SEC;
+    std::cout << "extract time: " << duration << std::endl;
+
     //*** step7. create new features and add obs
-    addObsNewTracks(vNewPts, pCurFrame);
+    start = clock();
+    addObsTracks(std::vector<Feature *>(), vNewPts, pCurFrame);
+    finish = clock();
+    duration = (double)(finish - start) / CLOCKS_PER_SEC;
+    std::cout << "***add second obs time: " << duration << std::endl;
 
     bool debug = true;
     if (debug)
@@ -95,7 +134,7 @@ void OpticalFlowTracker::trackCurrFrame(const cv::Mat &image, Frame *pCurFrame)
             cv::circle(I, vNewPts[i], 0, cv::Scalar(0, 0, 255), 3);
         }
         cv::imshow("I", I);
-        cv::waitKey();
+        cv::waitKey(1);
     }
 
     mLastImage_ = mCurrImage_.clone();
@@ -129,8 +168,8 @@ void OpticalFlowTracker::opticalFlowTrack(std::vector<cv::Point2f> &vLastP2ds,
     std::vector<float> vecError;
 
     // tracking points with optical flow
-    cv::calcOpticalFlowPyrLK(mLastImage_, mCurrImage_, vLastP2ds, vCurrP2ds, vecStatus, vecError, cv::Size(21, 21), 3,
-                             cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 50, 0.01));
+    cv::calcOpticalFlowPyrLK(mLastImage_, mCurrImage_, vLastP2ds, vCurrP2ds, vecStatus, vecError, cv::Size(15, 15), 3,
+                             cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 30, 0.01));
 
     checkInliers(vLastP2ds, vCurrP2ds, vInlierFlags, vecStatus);
 }
@@ -148,8 +187,6 @@ void OpticalFlowTracker::updateMask(const std::vector<cv::Point2f> &vCurrP2ds)
 void OpticalFlowTracker::extractPoints(int nTracked, const cv::Mat &curImg, std::vector<cv::Point2f> &vPoints)
 {
     //****Step2: extract 2d points, and add to current frame;
-    ;
-
     int needNum = std::max(sTrakPara_.nTotalPoints - nTracked, 0);
     if (needNum <= 0)
     {
@@ -161,36 +198,33 @@ void OpticalFlowTracker::extractPoints(int nTracked, const cv::Mat &curImg, std:
     std::cout << "need: " << needNum << ", extract new: " << vPoints.size() << std::endl;
 }
 
-void OpticalFlowTracker::addObsTracks(std::vector<Feature *> &vLastFeatures, std::vector<cv::Point2f> &vLastP2ds, Frame *pCurFrame)
+void OpticalFlowTracker::addObsTracks(const std::vector<Feature *> &vLastFeatures,
+                                      const std::vector<cv::Point2f> &vCurrP2ds,
+                                      Frame *pCurFrame)
 {
-    int nFeature = static_cast<int>(vLastFeatures.size());
+    int nP2ds = static_cast<int>(vCurrP2ds.size());
+    int nFeatures = static_cast<int>(vLastFeatures.size());
     Eigen::Vector2d p2d, p2d_norm;
     cv::Point2f cvP2d;
-    for (int i = 0; i < nFeature; i++)
+    for (int i = 0; i < nP2ds; i++)
     {
-        cvP2d = vLastP2ds[i];
+        cvP2d = vCurrP2ds[i];
         p2d << cvP2d.x, cvP2d.y;
         p2d_norm(0) = (p2d(0) - cx_) / fx_;
         p2d_norm(1) = (p2d(1) - cy_) / fy_;
-        vLastFeatures[i]->addObsFrame(pCurFrame, p2d, p2d_norm);
-        pCurFrame->addFeature(vLastFeatures[i]);
-    }
-}
+        //undistort p2d_norm();
 
-void OpticalFlowTracker::addObsNewTracks(const std::vector<cv::Point2f> &vPts, Frame *pCurFrame)
-{
-    int nFeature = static_cast<int>(vPts.size());
-    Eigen::Vector2d p2d, p2d_norm;
-    for (const cv::Point2f &pt : vPts)
-    {
-        Feature *pFeature = new Feature(nTrackerID_);
-        p2d << pt.x, pt.y;
-        p2d_norm(0) = (p2d(0) - cx_) / fx_;
-        p2d_norm(1) = (p2d(1) - cy_) / fy_;
+        Feature *pFeature;
+        if (nFeatures != 0)
+            pFeature = vLastFeatures[i];
+        else
+        {
+            pFeature = new Feature(nTrackerID_);
+            nTrackerID_++;
+        }
+
         pFeature->addObsFrame(pCurFrame, p2d, p2d_norm);
         pCurFrame->addFeature(pFeature);
-
-        nTrackerID_++;
     }
 }
 
@@ -199,7 +233,7 @@ void OpticalFlowTracker::checkInliers(std::vector<cv::Point2f> &vPrePts,
                                       std::vector<bool> &vInliers,
                                       std::vector<uchar> &status)
 {
-    int border_ = 3;
+    int border_ = 5;
     std::vector<cv::Point2f> vPreTemp, vCurTemp;
     std::vector<int> vPointIndex;
     for (std::size_t i = 0; i < status.size(); i++)

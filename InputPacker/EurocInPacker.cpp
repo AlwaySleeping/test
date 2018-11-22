@@ -245,25 +245,9 @@ bool EurocInPacker::getSensorData(int index, cv::Mat &image, std::vector<ImuInfo
     }
     std::pair<ImgInfo_s, std::vector<ImuInfo_s> >& pair = vImuImgPairs_[index];
     image = cv::imread(pair.first.imgPath);
+
+    undistort(image, image);
+
     vImuDate = pair.second;
 }
 
-bool EurocInPacker::undistort(cv::Mat srcImg, cv::Mat& distImg)
-{
-    cv::Mat camK(3, 3, CV_32FC1);
-    cv::Mat discoff(4, 1, CV_32FC1);
-    cv::Mat mapx, mapy;
-    if (mapx.empty())
-    {// use map buffer to speed up
-        cv::initUndistortRectifyMap(camK, discoff, cv::Mat(),
-                                    camK, srcImg.size(), CV_32FC1, mapx, mapy);
-    }
-    if(distImg.empty())
-    {
-        distImg.create(srcImg.size(), srcImg.type());
-    }
-    
-    cv::remap(srcImg, distImg, mapx, mapy, cv::INTER_LINEAR);
-
-    return true;
-}

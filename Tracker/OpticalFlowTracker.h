@@ -6,6 +6,8 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 
+#include "time.h"
+
 struct ImuIntrinsic_t;
 struct CamIntrinsic_t;
 
@@ -55,13 +57,14 @@ class OpticalFlowTracker
 
     void extractPoints(int nTracked, const cv::Mat &image, std::vector<cv::Point2f>& vPoints);
 
-    void addObsNewTracks(const std::vector<cv::Point2f> &vPts, Frame *pCurFrame);
-
-    void addObsTracks(std::vector<Feature *> &vLastFeatures, std::vector<cv::Point2f> &vLastP2ds, Frame *pCurFrame);
+    void addObsTracks(const std::vector<Feature *> &vLastFeatures, 
+                      const std::vector<cv::Point2f> &vCurrP2ds, 
+                      Frame *pCurFrame);
 
   private:
     Eigen::Matrix3d mCamK_;
     Eigen::Vector4d mDiscoff_;
+    cv::Mat mCvCamK_, mCvDisCoff_;
 
     int mImgW_, mImgH_;
 

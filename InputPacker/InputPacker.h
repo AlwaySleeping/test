@@ -44,14 +44,44 @@ class InputPacker
 
     virtual bool packSensorData() = 0;
 
-    virtual bool undistort(cv::Mat srcImg, cv::Mat& distImg) = 0;
+    void setCamIntrinsic(const Eigen::Matrix3d &camK, const Eigen::Vector4d &camDiscoff)
+    {
+        cvCameK_ = (cv::Mat_<float>(3, 3) << camK(0, 0), 0, camK(0, 2),
+                    0, camK(1, 1), camK(1, 2),
+                    0, 0, 1);
 
-    int getImgNum(){ return static_cast<int>(vImgInfos_.size());}
+        cvDiscoff_ = (cv::Mat_<float>(4, 1) << camDiscoff(0), camDiscoff(1), camDiscoff(2), camDiscoff(3));
+    }
+
+    bool undistort(const cv::Mat &srcImg, cv::Mat &distImg)
+    {
+        if (mapx_.empty() || mapy_.empty())
+        { // use map buffer to speed up
+            cv::initUndistortRectifyMap(cvCameK_, cvDiscoff_, cv::Mat(),
+                                        cvCameK_, srcImg.size(), CV_32FC1, mapx_, mapy_);
+        }
+
+        if (distImg.empty())
+        {
+            distImg.create(srcImg.size(), srcImg.type());
+        }
+
+        cv::remap(srcImg, distImg, mapx_, mapy_, cv::INTER_LINEAR);
+
+        return true;
+    }
+
+    int getImgNum() { return static_cast<int>(vImgInfos_.size()); }
 
   public:
     std::vector<ImgInfo_s> vImgInfos_;
     std::vector<ImuInfo_s> vImuInfos_;
-    std::vector<std::pair<ImgInfo_s, std::vector<ImuInfo_s> > > vImuImgPairs_;
+    std::vector<std::pair<ImgInfo_s, std::vector<ImuInfo_s>>> vImuImgPairs_;
+
+    cv::Mat cvCameK_;
+    cv::Mat cvDiscoff_;
+
+    cv::Mat mapx_, mapy_;
 };
 
 #endif //_INPUT_PACKER_H_/

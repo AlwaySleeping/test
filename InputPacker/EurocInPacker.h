@@ -16,8 +16,6 @@ class EurocInPacker : public InputPacker
 
     virtual bool packSensorData();
 
-    virtual bool undistort(cv::Mat srcImg, cv::Mat& distImg);
-
     bool readImage(const std::string &caseRootFolder);
     bool readImu(const std::string &caseRootFolder);
     bool readGroundTruth(const std::string &caseRootFolder);
