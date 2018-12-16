@@ -1,0 +1,47 @@
+[
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/InputPacker/EurocInPacker.cpp.o -c /media/feiyang/Documents/workSpace/test/InputPacker/EurocInPacker.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/InputPacker/EurocInPacker.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/System/System.cpp.o -c /media/feiyang/Documents/workSpace/test/System/System.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/System/System.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/Parser/Parser.cpp.o -c /media/feiyang/Documents/workSpace/test/Parser/Parser.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/Parser/Parser.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/Frame/Frame.cpp.o -c /media/feiyang/Documents/workSpace/test/Frame/Frame.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/Frame/Frame.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/Feature/Feature.cpp.o -c /media/feiyang/Documents/workSpace/test/Feature/Feature.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/Feature/Feature.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/Tracker/OpticalFlowTracker.cpp.o -c /media/feiyang/Documents/workSpace/test/Tracker/OpticalFlowTracker.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/Tracker/OpticalFlowTracker.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/IMU/IMUPreintegrator.cpp.o -c /media/feiyang/Documents/workSpace/test/IMU/IMUPreintegrator.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/IMU/IMUPreintegrator.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/IMU/NavState.cpp.o -c /media/feiyang/Documents/workSpace/test/IMU/NavState.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/IMU/NavState.cpp"
+},
+{
+  "directory": "/media/feiyang/Documents/workSpace/test/build",
+  "command": "/usr/bin/g++-5   -DENABLE_SSE -I/usr/local/include/eigen3 -I/usr/local/include/opencv -I/usr/local/include -isystem /home/feiyang/Pangolin/include -isystem /home/feiyang/Pangolin/build/src/include -I/media/feiyang/Documents/workSpace/test -I/media/feiyang/Documents/workSpace/test/Common -I/media/feiyang/Documents/workSpace/test/InputPacker -I/media/feiyang/Documents/workSpace/test/System -I/media/feiyang/Documents/workSpace/test/Parser -I/media/feiyang/Documents/workSpace/test/Frame -I/media/feiyang/Documents/workSpace/test/Feature -I/media/feiyang/Documents/workSpace/test/Tracker -I/media/feiyang/Documents/workSpace/test/IMU   -O3 -g -std=c++0x -fno-omit-frame-pointer -g   -o CMakeFiles/EurocMain.dir/EurocMain.cpp.o -c /media/feiyang/Documents/workSpace/test/EurocMain.cpp",
+  "file": "/media/feiyang/Documents/workSpace/test/EurocMain.cpp"
+}
+]

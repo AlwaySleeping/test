@@ -42,9 +42,9 @@ class SensorConfig
   public:
     // camera intistics:
     Eigen::Matrix3d k_;
-    Eigen::Vector4d discoff_;
+    Vector5d discoff_;
     double fx_, fy_, cx_, cy_;
-    double k1_, k2_;
+    double k1_, k2_, k3_;
     double p1_, p2_;
     double camFps_;
 

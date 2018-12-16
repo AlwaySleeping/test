@@ -12,7 +12,7 @@ class EurocInPacker : public InputPacker
 
     virtual void init(const std::string &caseRootFolder);
 
-    virtual bool getSensorData(int index, cv::Mat &image, std::vector<ImuInfo_s> &vImuDate);
+    virtual bool getSensorData(int index, cv::Mat &image, std::vector<ImuInfo_s> &vImuDate, bool bUndistortImage);
 
     virtual bool packSensorData();
 

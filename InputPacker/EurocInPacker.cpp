@@ -235,19 +235,19 @@ bool EurocInPacker::packSensorData()
     return true;
 }
 
-bool EurocInPacker::getSensorData(int index, cv::Mat &image, std::vector<ImuInfo_s> &vImuDate)
+bool EurocInPacker::getSensorData(int index, cv::Mat &image, std::vector<ImuInfo_s> &vImuDate, bool bUndistortImage)
 {
     int nParis = static_cast<int>(vImuImgPairs_.size());
-    if(index >= nParis)
+    if (index >= nParis)
     {
-        std::cout<<"error: input index > total pairs, input: "<<index<<", total num: "<<nParis;
+        std::cout << "error: input index > total pairs, input: " << index << ", total num: " << nParis;
         return false;
     }
-    std::pair<ImgInfo_s, std::vector<ImuInfo_s> >& pair = vImuImgPairs_[index];
+    std::pair<ImgInfo_s, std::vector<ImuInfo_s>> &pair = vImuImgPairs_[index];
     image = cv::imread(pair.first.imgPath);
 
-    undistort(image, image);
+    if (bUndistortImage)
+        undistort(image, image);
 
     vImuDate = pair.second;
 }
-

@@ -1,0 +1,3 @@
+/media/feiyang/Documents/workSpace/test/build/CMakeFiles/edit_cache.dir
+/media/feiyang/Documents/workSpace/test/build/CMakeFiles/rebuild_cache.dir
+/media/feiyang/Documents/workSpace/test/build/CMakeFiles/EurocMain.dir

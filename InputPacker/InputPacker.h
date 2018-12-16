@@ -7,31 +7,7 @@
 #include <vector>
 #include <Eigen/Core>
 #include <opencv2/opencv.hpp>
-
-struct ImgInfo_s
-{
-    std::string imgPath;
-    int64_t timeStamp;
-};
-
-struct ImuInfo_s
-{
-    Eigen::Vector3d acc;
-    Eigen::Vector3d gyr;
-    int64_t deltaT;
-    int64_t timeStamp;
-};
-
-// ground truth
-struct GTInfo_s
-{
-    Eigen::Vector3d position;
-    Eigen::Vector4d qRotation;
-    Eigen::Vector3d velocity;
-    Eigen::Vector3d bw;
-    Eigen::Vector3d ba;
-    int64_t timeStamp;
-};
+#include "CommonDef.h"
 
 class InputPacker
 {
@@ -40,17 +16,17 @@ class InputPacker
 
     virtual void init(const std::string &caseRootFolder) = 0;
 
-    virtual bool getSensorData(int index, cv::Mat &image, std::vector<ImuInfo_s> &vImuDate) = 0;
+    virtual bool getSensorData(int index, cv::Mat &image, std::vector<ImuInfo_s> &vImuDate, bool bUndistortImage) = 0;
 
     virtual bool packSensorData() = 0;
 
-    void setCamIntrinsic(const Eigen::Matrix3d &camK, const Eigen::Vector4d &camDiscoff)
+    void setCamIntrinsic(const Eigen::Matrix3d &camK, const Vector5d &camDiscoff)
     {
         cvCameK_ = (cv::Mat_<float>(3, 3) << camK(0, 0), 0, camK(0, 2),
                     0, camK(1, 1), camK(1, 2),
                     0, 0, 1);
 
-        cvDiscoff_ = (cv::Mat_<float>(4, 1) << camDiscoff(0), camDiscoff(1), camDiscoff(2), camDiscoff(3));
+        cvDiscoff_ = (cv::Mat_<float>(4, 1) << camDiscoff(0), camDiscoff(1), camDiscoff(3), camDiscoff(4));
     }
 
     bool undistort(const cv::Mat &srcImg, cv::Mat &distImg)

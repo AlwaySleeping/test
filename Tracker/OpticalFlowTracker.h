@@ -1,83 +1,108 @@
 
-#ifndef OPTICAL_FLOW_TRACKER_H_
-#define OPTICAL_FLOW_TRACKER_H_
+#ifndef OpticalFlowTracker_H
+#define OpticalFlowTracker_H
 
 #include <vector>
+#include <iosfwd>
+#include <memory>
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 
-#include "time.h"
-
-struct ImuIntrinsic_t;
-struct CamIntrinsic_t;
 
 namespace SLAM
 {
 
-class Frame;
-class Feature;
-
-struct TrackPara_t
-{
-    double nQualityLevel;
-    int nTotalPoints;
-    int nMask;
-    int nMaxLength;
-    int nRowGrid;
-    int nColGrid;
-};
-
 class OpticalFlowTracker
 {
-  public:
+public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+  struct TrackerPara_s
+  {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    int nFeatureNum;         
+    int nMaskRadius;         
+    int nMaxTrackLenth;      
+    int nBorder;             
+    float fDistance;         
+    float fQuality;          
+    Eigen::Vector2d f, c, p; 
+    Eigen::Vector3d k;
+    bool bDoCLAHE; 
+    bool bInputUndistortedImg;
+    TrackerPara_s() : f(Eigen::Vector2d::Zero()),
+                      c(Eigen::Vector2d::Zero()), p(Eigen::Vector2d::Zero()),
+                      k(Eigen::Vector3d::Zero())
+    {
+      nFeatureNum = 300;
+      nMaskRadius = 10;
+      nMaxTrackLenth = 100;
+      nBorder = 3;
+      fDistance = 3.0f;
+      fQuality = 0.00001f;
+      bDoCLAHE = false;
+      bInputUndistortedImg = false;
+    }
+  };
 
-    OpticalFlowTracker(){}
+  OpticalFlowTracker();
 
-    ~OpticalFlowTracker();
+  ~OpticalFlowTracker();
 
-    void setTrackPara(const CamIntrinsic_t& mCamInsic);
+  bool setPara(const TrackerPara_s &stPara);
 
-    void opticalFlowTrack(std::vector<cv::Point2f> &vLastP2ds,
-                          std::vector<cv::Point2f> &vCurrP2ds,
-                          std::vector<bool> &vInlierFlags);
+  void trackCurrFrame(cv::Mat &inputImage);
 
-    void checkInliers(std::vector<cv::Point2f> &vPrePts,
-                      std::vector<cv::Point2f> &vCurPts,
-                      std::vector<bool> &vInliers,
-                      std::vector<uchar> &status);
+  void getUndistortedPoints(std::vector<cv::Point2f> &vecPoints);
 
-    void removeOutliers(std::vector<bool> &vInlierFlags,
-                        std::vector<Feature *> &vLastFeatures,
-                        std::vector<cv::Point2f> &vCurrP2ds);
+  void getOrgImagePoints(std::vector<cv::Point2f> &vecPoints);
 
-    void updateMask(const std::vector<cv::Point2f> &vPts);
+  std::vector<cv::Point2f> &getTrackedPoints(void);
 
-    void trackCurrFrame(const cv::Mat &image, Frame *pCurFrame);
+  std::vector<int> &getIDs(void);
 
-    void extractPoints(int nTracked, const cv::Mat &image, std::vector<cv::Point2f>& vPoints);
+  std::vector<int> &getTrackCnt();
 
-    void addObsTracks(const std::vector<Feature *> &vLastFeatures, 
-                      const std::vector<cv::Point2f> &vCurrP2ds, 
-                      Frame *pCurFrame);
+  void reset(void);
 
-  private:
-    Eigen::Matrix3d mCamK_;
-    Eigen::Vector4d mDiscoff_;
-    cv::Mat mCvCamK_, mCvDisCoff_;
+  void preProcess(cv::Mat &grayImage);
 
-    int mImgW_, mImgH_;
+  void setMask(void);
 
-    double fx_, fy_, cx_, cy_;
+  void addPoints(const std::vector<cv::Point2f> &vecPts);
 
-    TrackPara_t sTrakPara_;
+  void rejectOutlierWithFMat();
 
-    Frame *pLastFrame_;
-    cv::Mat mLastImage_;
-    cv::Mat mCurrImage_;
-    cv::Mat mMask_;
+  Eigen::Vector2d undistortPoint(const Eigen::Vector2d &pt);
 
-    int nTrackerID_; // Tracker ID
+  inline bool isInBorder(const cv::Point2f &pt);
+
+  template <class Type>
+  void reduceVector(std::vector<Type> &vecData, const std::vector<uchar> &vecStatus) const;
+
+  void reduceVector(const std::vector<uchar> &vecStatus);
+
+  void extractNewPoints(cv::Mat &grayImg,
+                        std::vector<cv::Point2f> &vOldPoints,
+                        std::vector<cv::Point2f> &vNewPoints);
+
+private:
+  cv::Ptr<cv::CLAHE> pClaheObj_;
+
+  TrackerPara_s stTrackPara_;
+
+  int nImageCols_, nImageRows_;
+
+  int nTrackerID_;
+  cv::Mat prvGrayImage_, curGrayImage_;
+  std::vector<cv::Point2f> vecPrvPoints_, vecCurPoints_;
+  std::vector<int> vecTrackerID_, vecPointTrackedCnt_;
+  std::vector<cv::Point2f> vecUndistortedPoints_, vecPrvUndistortedPoints_;
+
+  cv::Mat mask_;
+  Eigen::Vector2d if_;
+
 };
-} // namespace SLAM
-#endif // OPTICAL_FLOW_TRACKER_H_
+  
+}
+#endif // OpticalFlowTracker_H

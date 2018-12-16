@@ -25,13 +25,15 @@ bool SensorConfig::loadSensorConfig(const std::string &sensorConfigPath)
         
         k1_ = fSettings["Camera.k1"];
         k2_ = fSettings["Camera.k2"];
+        k3_ = fSettings["Camera.k3"];
+        
         p1_ = fSettings["Camera.p1"];
         p2_ = fSettings["Camera.p2"];
         
         camFps_ = fSettings["rate_hz"];
         
         k_ << fx_, 0, cx_, 0, fy_, cy_, 0, 0, 1;
-        discoff_<< k1_, k2_, p1_, p2_;
+        discoff_<< k1_, k2_, k3_, p1_, p2_;
         
         //imu cofig params:
         cv::FileNode fs = fSettings["T_imu_cam"];

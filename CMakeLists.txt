@@ -27,6 +27,9 @@ set(SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Frame/Frame.cpp
   ${PROJECT_SOURCE_DIR}/Feature/Feature.cpp
   ${PROJECT_SOURCE_DIR}/Tracker/OpticalFlowTracker.cpp
+  ${PROJECT_SOURCE_DIR}/IMU/IMUPreintegrator.cpp
+  ${PROJECT_SOURCE_DIR}/IMU/NavState.cpp
+
 )
 
 set(LINK_LIBS
@@ -41,6 +44,7 @@ include_directories(
 )
 
 include_directories(
+  ${PROJECT_SOURCE_DIR}
   ${PROJECT_SOURCE_DIR}/Common
   ${PROJECT_SOURCE_DIR}/InputPacker
   ${PROJECT_SOURCE_DIR}/System
@@ -48,6 +52,7 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/Frame
   ${PROJECT_SOURCE_DIR}/Feature
   ${PROJECT_SOURCE_DIR}/Tracker
+  ${PROJECT_SOURCE_DIR}/IMU
 
 ) 
 
